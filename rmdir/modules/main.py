@@ -22,6 +22,15 @@ def limpar_diretorios(pasta, excecoes):
 
     print(f"Todo conteúdo da pasta {pasta} foi excluído.")
 
+def lista_usuarios():
+    usuarios = Path.cwd() / 'usuarios.txt'
+    comando_dsquery = f'dsquery user "ou=Usuários SOLARIUM,dc=solarium,dc=corp" | dsget user -samid -disabled > {usuarios}'
+
+    with open(usuarios, 'r') as arquivo:
+        conteudo = arquivo.read()
+        usuarios_ativos_ad = [valor.title().replace('.', ' ') for indice, valor in enumerate(conteudo.split()[:-3:2]) if valor not in ['samid', 'disabled'] and conteudo.split()[indice * 2 + 1] == 'no']
+
+        return usuarios_ativos_ad
 
 def criar_diretorios(usuarios_dominio, diretorio):
     """Cria novos diretórios com base na lista de usuários do domínio."""
@@ -42,6 +51,12 @@ def main():
 
     # exclui os diretórios antigos
     limpar_diretorios(caminho_compartilhamento, excecoes)
+
+    # lista de diretórios que serão criados
+    diretorios = lista_usuarios()
+
+    # criando novos diretórios
+    criar_diretorios(diretorios, caminho_compartilhamento)
 
     """
     # cria novos diretórios com base nos usuários do domínio
