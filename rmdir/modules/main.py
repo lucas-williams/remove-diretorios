@@ -1,5 +1,6 @@
 import os
 import logging
+from pathlib import Path
 from configparser import ConfigParser
 
 def carrega_conf():
@@ -25,6 +26,7 @@ def limpar_diretorios(pasta, excecoes):
 def lista_usuarios():
     usuarios = Path.cwd() / 'usuarios.txt'
     comando_dsquery = f'dsquery user "ou=Usuários SOLARIUM,dc=solarium,dc=corp" | dsget user -samid -disabled > {usuarios}'
+    os.system(comando_dsquery)
 
     with open(usuarios, 'r') as arquivo:
         conteudo = arquivo.read()
