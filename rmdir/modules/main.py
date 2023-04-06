@@ -51,8 +51,17 @@ def main():
     excecoes = config.get('manter_diretorios')
     criar_dir = config.get('criar_diretorios')
 
+    logging.basicConfig(filename='program.log', level=logging.INFO,
+                        format='%(asctime)s %(levelname)s:%(message)s')
+
+    # registra a configuração carregada
+    logging.info('Configuração carregada: {}'.format(config))
+
     # exclui os diretórios antigos
     limpar_diretorios(caminho_compartilhamento, excecoes)
+
+    # registra a exclusão dos diretórios antigos
+    logging.info('Diretórios antigos excluídos: {}'.format(caminho_compartilhamento))
 
     # lista de diretórios que serão criados
     diretorios = lista_usuarios()
@@ -60,16 +69,12 @@ def main():
     # criando novos diretórios
     criar_diretorios(diretorios, caminho_compartilhamento)
 
-    """
-    # cria novos diretórios com base nos usuários do domínio
-    domain_users = win32com.client.GetObject("LDAP://" + config['domain_name']).members()
-    create_directories(domain_users, config['directory_path'])
+    # registra a criação dos novos diretórios
+    logging.info('Novos diretórios criados: {}'.format(diretorios))
 
-    # registra as ações do programa em um arquivo de log
-    logging.basicConfig(filename='program.log', level=logging.INFO)
-    logging.info('Diretórios antigos excluídos: {}'.format(config['directory_path']))
-    logging.info('Novos diretórios criados com base em: {}'.format(config['domain_name']))
-    """
+    # registra o final da execução
+    logging.info('Programa finalizado com sucesso.')
+
 
 if __name__ == '__main__':
     main()
