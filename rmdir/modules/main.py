@@ -1,6 +1,6 @@
 import os
 import logging
-import win32com.client
+# import win32com.client
 
 def read_config_file(file_path):
     """Lê o arquivo de configuração e retorna as informações necessárias."""
