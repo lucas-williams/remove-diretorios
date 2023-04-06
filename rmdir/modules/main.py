@@ -26,7 +26,9 @@ def limpar_diretorios(pasta, excecoes):
 def create_directories(domain_users, directory_path):
     """Cria novos diretórios com base na lista de usuários do domínio."""
     # implementação
-    pass
+    for users in domain_users:
+        path = os.path.join(directory_path, users)
+        os.mkdir(path)
 
 def main():
     """Função principal que inicia o fluxo de execução do programa."""
