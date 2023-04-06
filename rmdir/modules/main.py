@@ -8,20 +8,20 @@ def carrega_conf():
     return config['SERVIDOR']
 
 def limpar_diretorios(pasta, excecoes):
-    diretorio = os.listdir(pasta)
-    for arquivo in diretorio:
-        caminho = os.path.join(pasta, arquivo)
-        if os.path.isdir(pasta):
-            if arquivo in excecoes:
-                raise Exception(f"A exclusão do diretório '{arquivo}' foi cancelada")
-            else:
-                os.rmdir(caminho)
-        else:
-            if arquivo in excecoes:
-                raise Exception(f"A exclusão do arquivo '{arquivo}' foi cancelada")
-            else:
-                os.remove(caminho)
-    print('Todo conteúdo da pasta %s foi excluído' % (pasta))
+    for entrada in os.scandir(pasta):
+        if entrada.name in excecoes:
+            print(f'O arquivo {entrada.name} não foi deletado! ')
+            continue
+        try:
+            if entrada.is_file():
+                os.remove(entrada.path)
+            elif entrada.is_dir():
+                os.rmdir(entrada.path)
+        except Exception as e:
+            print(f"Erro ao excluir '{entrada.path}': {e}")
+
+    print(f"Todo conteúdo da pasta {pasta} foi excluído.")
+
 
 def create_directories(domain_users, directory_path):
     """Cria novos diretórios com base na lista de usuários do domínio."""
