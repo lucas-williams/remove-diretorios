@@ -8,10 +8,16 @@ def carrega_conf():
     config.read('conf.ini')
     return config['SERVIDOR']
 
+def cria_arquivo_log():
+    log_file = Path.cwd() / 'LOG.txt'
+    with open(log_file, 'w', encoding='utf-8') as log:
+        log.write(f'O arquivo {os.path.basename(log_file)} foi criado em: {os.path.abspath(log_file)}\n\n')
+    return log_file
+
 def limpar_diretorios(pasta, excecoes):
     for entrada in os.scandir(pasta):
         if entrada.name in excecoes:
-            print(f'O arquivo {entrada.name} não foi deletado! ')
+            logging.info(f'O arquivo {entrada.name} não foi deletado! ')
             continue
         try:
             if entrada.is_file():
@@ -50,31 +56,16 @@ def main():
     caminho_compartilhamento = os.path.join(ip, compartilhamento)
     excecoes = config.get('manter_diretorios')
     criar_dir = config.get('criar_diretorios')
-
-    logging.basicConfig(filename='program.log', level=logging.INFO,
-                        format='%(asctime)s %(levelname)s:%(message)s')
-
-    # registra a configuração carregada
-    logging.info('Configuração carregada: {}'.format(config))
+    log_file = cria_arquivo_log()
 
     # exclui os diretórios antigos
     limpar_diretorios(caminho_compartilhamento, excecoes)
-
-    # registra a exclusão dos diretórios antigos
-    logging.info('Diretórios antigos excluídos: {}'.format(caminho_compartilhamento))
 
     # lista de diretórios que serão criados
     diretorios = lista_usuarios()
 
     # criando novos diretórios
     criar_diretorios(diretorios, caminho_compartilhamento)
-
-    # registra a criação dos novos diretórios
-    logging.info('Novos diretórios criados: {}'.format(diretorios))
-
-    # registra o final da execução
-    logging.info('Programa finalizado com sucesso.')
-
 
 if __name__ == '__main__':
     main()
