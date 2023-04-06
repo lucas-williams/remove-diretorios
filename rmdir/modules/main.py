@@ -49,7 +49,7 @@ def main():
     compartilhamento = config.get('pasta_compartilhada')
     caminho_compartilhamento = os.path.join(ip, compartilhamento)
     excecoes = config.get('manter_diretorios')
-    criar_diretorios = config.get('criar_diretorios')
+    criar_dir = config.get('criar_diretorios')
 
     # exclui os diretórios antigos
     limpar_diretorios(caminho_compartilhamento, excecoes)
