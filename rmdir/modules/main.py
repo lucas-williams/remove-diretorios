@@ -7,10 +7,21 @@ def carrega_conf():
     config.read('conf.ini')
     return config['SERVIDOR']
 
-def delete_directories(directory_path):
-    """Exclui todos os diretórios dentro da pasta compartilhada."""
-    # implementação
-    pass
+def limpar_diretorios(pasta, excecoes):
+    diretorio = os.listdir(pasta)
+    for arquivo in diretorio:
+        caminho = os.path.join(pasta, arquivo)
+        if os.path.isdir(pasta):
+            if arquivo in excecoes:
+                raise Exception(f"A exclusão do diretório '{arquivo}' foi cancelada")
+            else:
+                os.rmdir(caminho)
+        else:
+            if arquivo in excecoes:
+                raise Exception(f"A exclusão do arquivo '{arquivo}' foi cancelada")
+            else:
+                os.remove(caminho)
+    print('Todo conteúdo da pasta %s foi excluído' % (pasta))
 
 def create_directories(domain_users, directory_path):
     """Cria novos diretórios com base na lista de usuários do domínio."""
@@ -24,12 +35,11 @@ def main():
     ip = config.get('ip')
     compartilhamento = config.get('pasta_compartilhada')
     caminho_compartilhamento = os.path.join(ip, compartilhamento)
-    manter_diretorios = config.get('manter_diretorios')
+    excecoes = config.get('manter_diretorios')
     criar_diretorios = config.get('criar_diretorios')
-    print(f'{caminho_compartilhamento}, {manter_diretorios}, {criar_diretorios}')
 
     # exclui os diretórios antigos
-    delete_directories(config['directory_path'])
+    limpar_diretorios(caminho_compartilhamento, excecoes)
 
     """
     # cria novos diretórios com base nos usuários do domínio
